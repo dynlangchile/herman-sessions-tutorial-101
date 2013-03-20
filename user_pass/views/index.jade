@@ -1,5 +1,15 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  - if (is_logged_in)
+    h1 HOLA #{username} !!!
+    p Bienvenido
+    p Tu nombre completo es #{fullname}
+    p="(Podríamos hacer más interesante esto, cierto?)"
+  - else
+    h1 HOLA
+    p Aún no estas loggueado
+    p
+    | Click&nbsp;
+    a(href='/login') acá
+    | &nbsp;para entrar

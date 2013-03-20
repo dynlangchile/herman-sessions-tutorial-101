@@ -169,7 +169,7 @@ Podemos ver que la cuenta del primer browser no se vió afectada y que el segund
 
 ## Sesión con user y password
 
-Por supuesto que queremos más, y no hablo de implementar la variable de las visitas en las vistas, ni otros _eye_candy_. Hablo de poder habilitar una sesión dados un user y password adecuados. Esto es lo que haremos en el siguiente ejemplo.
+Por supuesto que queremos más, y no hablo de implementar la variable de las visitas en las vistas, ni otros _eye candy_. Hablo de poder habilitar una sesión dados un user y password adecuados. Esto es lo que haremos en el siguiente ejemplo.
 
 Primero creemos el ambiente en express:
 
@@ -236,11 +236,10 @@ Que necesitan sus respectivos _controller handlers_:
 
 ````js
 exports.get_login = function (req, res) {
-  res.render('get_login');
+  res.render('get_login', { title: 'Simple Login'});
 }
 
 exports.post_login = function (req, res) {
-
   // PLACEHOLDER
   res.send('Aquí debería ir la respuesta al POST /login')
   // PLACEHOLDER-END
@@ -252,5 +251,114 @@ Veremos en unos instantes qué es lo que hay que hacer con el _handler_ del `POS
 * `views/get_login.jade`
 
 ````jade
+extends layout
 
+block content
+  form(method='post')
+    h1 Login
+    input(type='text', name='username', placeholder='Username')
+    input(type='password', name='password', placeholder='Password')
+    input(type='submit', value='Login')
 ````
+
+El resultado, que no va a ganar un premio al diseño, pero hace el trabajo:
+
+![Pantallazo](http://cl.ly/image/30061G2f0m3J/Screen%20Shot%202013-03-20%20at%2010.13.18%20AM.png)
+
+![Pantallazo](http://cl.ly/image/2Y3G1i2n0e45/Screen%20Shot%202013-03-20%20at%2010.26.57%20AM.png)
+
+#### Agregando lógica a la autenticación
+
+OK. Ya estamos acá. Veamos como hacer una autenticación. Lo normal sería hacerla contra una base de datos, pero seremos prácticos y abstraeremos este paso con una función _mock_.
+
+La lógica en esta función hará dos cosas: a) Revisar que las credenciales estén correctas, y b) Si están correctas, hacer la nota respectiva en la sesión.
+
+* `routes/index.js`
+
+````js
+exports.post_login = function (req, res) {
+  var username = req.body.username || '';
+  var password = req.body.password || '';
+
+  mockDatabaseQuery(username, password, onDBResponse);
+
+  function onDBResponse (response) {
+    if (response === 'ERROR') return res.send('Error en la Autenticación');
+    if (response === 'OK') return autenticacionOK();
+  }
+
+  function autenticacionOK () {
+    // Ahora rellenemos la sesión
+    req.session.is_logged_in  = true;
+    req.session.user          = {}
+    req.session.user.username = username;
+    req.session.user.fullname = 'Juan Carlos Moya';
+    return res.redirect('/');
+  }
+}
+
+// Nuestra función para simular la consulta a la base de datos
+function mockDatabaseQuery (username, password, callback) {
+  if (username === 'juan' && password === 'moya') {
+    callback('OK');
+  } else {
+    callback('ERROR');
+  }
+}
+````
+
+Finalmente, y para que tenga sentido el ejercicio, exhibiremos los datos del usuario loggueado en el index. (Y además agreguemos un link al login en caso que el usuario no este loggueado y quiera hacerlo).
+
+Todo esto se hace en la vista y en una función de controlador
+
+* `views/index.jade`
+
+````jade
+extends layout
+
+block content
+  - if (is_logged_in)
+    h1 HOLA #{username} !!!
+    p Bienvenido
+    p Tu nombre completo es #{fullname}
+    p="(Podríamos hacer más interesante esto, cierto?)"
+  - else
+    h1 HOLA
+    p Aún no estas loggueado
+    p
+    | Click&nbsp;
+    a(href='/login') acá
+    | &nbsp;para entrar
+````
+
+* `routes/index.js`
+
+````js
+exports.index = function(req, res) {
+  var is_logged_in,
+      username,
+      fullname;
+  // Veamos si el usuario tiene sesión
+  if (req.session.is_logged_in) {
+    is_logged_in = true;
+    username = req.session.user.username;
+    fullname = req.session.user.fullname;
+  } else {
+    is_logged_in = false;
+  }
+
+  var renderVars =  { title         : 'Express'
+                    , is_logged_in  : is_logged_in
+                    , username      : username
+                    , fullname      : fullname
+                    }
+
+  console.log(renderVars)
+
+  res.render( 'index', renderVars);
+}
+````
+
+## Conclusión
+
+En la próxima entrega a este tutorial, veremos como implementar en este mismo modelo, una abstracción de roles, darle distintos privilegios a rutas determinadas (vía middleware o en función de controlador) y como escalar este sistema, configurando una _sessionstore_ usando Redis. Muchas Gracias!
