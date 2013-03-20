@@ -221,8 +221,8 @@ app.get('/', routes.index);
 app.get('/users', user.list);
 
 // Rutas para el login
-app.get('/login', route.get_login);
-app.post('/login', route.post_login);
+app.get('/login', routes.get_login);
+app.post('/login', routes.post_login);
 // Fin de las Rutas para el login
 
 http.createServer(app).listen(app.get('port'), function(){
@@ -235,6 +235,22 @@ Que necesitan sus respectivos _controller handlers_:
 * `routes/index.js`
 
 ````js
-// OLA KE ASE
+exports.get_login = function (req, res) {
+  res.render('get_login');
+}
+
+exports.post_login = function (req, res) {
+
+  // PLACEHOLDER
+  res.send('Aquí debería ir la respuesta al POST /login')
+  // PLACEHOLDER-END
+}
 ````
 
+Veremos en unos instantes qué es lo que hay que hacer con el _handler_ del `POST`. Queremos terminar luego nuestro formulario.
+
+* `views/get_login.jade`
+
+````jade
+
+````

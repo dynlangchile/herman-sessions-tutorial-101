@@ -37,8 +37,8 @@ app.get('/', routes.index);
 app.get('/users', user.list);
 
 // Rutas para el login
-app.get('/login', route.get_login);
-app.post('/login', route.post_login);
+app.get('/login', routes.get_login);
+app.post('/login', routes.post_login);
 // Fin de las Rutas para el login
 
 http.createServer(app).listen(app.get('port'), function(){
