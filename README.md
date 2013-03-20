@@ -3,7 +3,7 @@ herman-sessions-tutorial
 
 Una introducción a sessions (sesiones) usando NodeJS y ExpressJS
 
-# Ejemplo Simple
+## Ejemplo Simple
 
 ````bash
 $ sudo npm install -g express
@@ -167,7 +167,7 @@ GET /stylesheets/style.css 304 1ms
 
 Podemos ver que la cuenta del primer browser no se vió afectada y que el segundo browser tiene su propia cuenta. Nuestra sesión funciona!
 
-# Sesión con user y password
+## Sesión con user y password
 
 Por supuesto que queremos más, y no hablo de implementar la variable de las visitas en las vistas, ni otros _eye_candy_. Hablo de poder habilitar una sesión dados un user y password adecuados. Esto es lo que haremos en el siguiente ejemplo.
 
