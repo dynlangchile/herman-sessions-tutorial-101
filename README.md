@@ -171,4 +171,70 @@ Podemos ver que la cuenta del primer browser no se vió afectada y que el segund
 
 Por supuesto que queremos más, y no hablo de implementar la variable de las visitas en las vistas, ni otros _eye_candy_. Hablo de poder habilitar una sesión dados un user y password adecuados. Esto es lo que haremos en el siguiente ejemplo.
 
+Primero creemos el ambiente en express:
+
+````bash
+$ mkdir user_pass
+$ cd user_pass
+$ express
+$ npm install
+````
+
+Modificamos nuevamente `app.js`
+
+* `app.js`
+
+````js
+//...
+
+app.configure(function(){
+  app.set('port', process.env.PORT || 3000);
+  app.set('views', __dirname + '/views');
+  app.set('view engine', 'jade');
+
+  // Cambios introducidos al express básico
+  app.use(express.cookieParser());
+  app.use(express.session({secret: 'crazy clown'}));
+  // Fin de los cambios
+
+  app.use(express.favicon());
+  app.use(express.logger('dev'));
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(app.router);
+  app.use(express.static(path.join(__dirname, 'public')));
+});
+
+//...
+````
+
+Y bueno, vamos a crear un formulario de login muy primitivo:
+
+### Formulario de login en express 
+
+Las rutas:
+
+* `app.js`
+
+````js
+app.get('/', routes.index);
+app.get('/users', user.list);
+
+// Rutas para el login
+app.get('/login', route.get_login);
+app.post('/login', route.post_login);
+// Fin de las Rutas para el login
+
+http.createServer(app).listen(app.get('port'), function(){
+  console.log("Express server listening on port " + app.get('port'));
+});
+````
+
+Que necesitan sus respectivos _controller handlers_:
+
+* `routes/index.js`
+
+````js
+// OLA KE ASE
+````
 
