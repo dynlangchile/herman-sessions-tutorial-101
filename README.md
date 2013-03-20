@@ -22,7 +22,7 @@ Express server listening on port 3000
 
 Si hacemos un request, vemos que express no arroja cookie.
 
-[Pantallazo](http://cl.ly/image/1K2a2v1I1i0G/Screen%20Shot%202013-03-20%20at%208.27.56%20AM.png)
+![Pantallazo](http://cl.ly/image/1K2a2v1I1i0G/Screen%20Shot%202013-03-20%20at%208.27.56%20AM.png)
 
 Una rápida inspección al _html_ nos muestra además que no hay información para que pensemos que hay algún tipo de sesión.
 
@@ -56,7 +56,7 @@ app.configure(function(){
 
 Una rápida inspección nos muestra que ahora tenemos soporte para cookies. La sesión está implementada.
 
-[Pantallazo](http://cl.ly/image/043L0e0A2F0D/Screen%20Shot%202013-03-20%20at%208.31.09%20AM.png)
+![Pantallazo](http://cl.ly/image/043L0e0A2F0D/Screen%20Shot%202013-03-20%20at%208.31.09%20AM.png)
 
 Aún si, no hemos hecho nada valioso. Simplemente tenemos una cookie _bindeada_ (por inglés _bind_ que significa "amarre" o "amarrar") a un identificador de sesión. Implementaremos un rudimentario contador de visitas para darle valor a esta implementación.
 
